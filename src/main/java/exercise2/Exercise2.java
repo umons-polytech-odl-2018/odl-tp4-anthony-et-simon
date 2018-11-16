@@ -7,14 +7,19 @@ import java.nio.file.Paths;
 import java.time.LocalDate;
 
 public class Exercise2 {
-	public static void save(Classroom classroom, Path filePath) {
-
+	public static void save(Classroom classroom, Path filePath) throws IOException {
+		try (OutputStream out = Files.newOutputStream(filePath)) {
+			ObjectOutput oos = new ObjectOutputStream(out);
+			oos.writeObject(classroom);
+		}
 	}
 
-	public static Classroom load(Path filePath) {
-		return null;
+	public static Classroom load(Path filePath) throws IOException, ClassNotFoundException {
+		try (InputStream in = Files.newInputStream(filePath)) {
+			ObjectInput ois = new ObjectInputStream(in);
+			return (Classroom) ois.readObject();
+		}
 	}
-
 	public static void main(String[] args) throws IOException {
 		Teacher teacher = new Teacher("Claire", "Barnett",
 			LocalDate.of(1975, 3, 7), new PhoneNumber("+32 65 123 456"),
